@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Factory, Zap, Truck, FlaskConical, Users, Leaf } from "lucide-react";
 import { PageShell } from "@/components/layout/PageShell";
+import { NewsFloating } from "@/components/NewsFloating";
 import { pillars, impactStats, goals, site } from "@/lib/site";
 
 const pillarIcons = [Factory, Zap, Truck, FlaskConical, Users, Leaf];
@@ -168,6 +169,8 @@ function Home() {
           </Link>
         </div>
       </section>
+
+      <NewsFloating />
     </PageShell>
   );
 }
