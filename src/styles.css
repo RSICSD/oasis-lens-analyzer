@@ -69,12 +69,13 @@
   --radius: 0.5rem;
 
   /* RSIC palette */
-  --forest-deep: oklch(0.33 0.07 152);   /* #1B4332 */
-  --forest: oklch(0.48 0.09 152);
-  --terracotta: oklch(0.58 0.16 38);     /* #C7522A */
-  --sand: oklch(0.94 0.03 80);           /* #F4E9D8 */
-  --graphite: oklch(0.18 0.005 0);       /* #1A1A1A */
-  --gold: oklch(0.78 0.11 78);           /* #D4A574 */
+  --forest-deep: #077a75;   /* brand teal */
+  --forest: #0a9b94;
+  --terracotta: #ca943f;     /* brand gold */
+  --sand: oklch(0.94 0.03 80);
+  --graphite: oklch(0.18 0.005 0);
+  --gold: #ca943f;
+
 
   --background: oklch(0.985 0.008 80);
   --foreground: var(--graphite);
