@@ -148,6 +148,8 @@ export function Complex3D({
           />
         </Canvas>
       </Suspense>
+      )}
+
       <div className="pointer-events-none absolute bottom-3 start-3 flex flex-wrap gap-2 text-xs">
         {(["planned", "in_progress", "done", "blocked"] as const).map((s) => (
           <span
