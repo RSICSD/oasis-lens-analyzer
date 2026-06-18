@@ -3,6 +3,12 @@ import { Search, X } from "lucide-react";
 import { categoryLabelAr, statusLabelAr } from "./status";
 import type { WpCategory, WpStatus } from "@/lib/poc-data";
 
+type PocSearch = {
+  q?: string;
+  category?: WpCategory;
+  status?: WpStatus;
+};
+
 const categories: WpCategory[] = [
   "agreement",
   "due_diligence",
@@ -34,7 +40,7 @@ export function WorkPackageFilters({
             type="search"
             value={q}
             onChange={(e) =>
-              navigate({ search: (prev) => ({ ...prev, q: e.target.value || undefined }) })
+              navigate({ search: (prev: PocSearch) => ({ ...prev, q: e.target.value || undefined }) })
             }
             placeholder="ابحث في حزم العمل والوثائق..."
             className="w-full rounded-md border border-input bg-background px-3 py-2 pe-9 text-sm outline-none focus:border-primary"
@@ -45,7 +51,7 @@ export function WorkPackageFilters({
           value={category}
           onChange={(e) =>
             navigate({
-              search: (prev) => ({
+              search: (prev: PocSearch) => ({
                 ...prev,
                 category: e.target.value === "all" ? undefined : (e.target.value as WpCategory),
               }),
@@ -65,7 +71,7 @@ export function WorkPackageFilters({
           value={status}
           onChange={(e) =>
             navigate({
-              search: (prev) => ({
+              search: (prev: PocSearch) => ({
                 ...prev,
                 status: e.target.value === "all" ? undefined : (e.target.value as WpStatus),
               }),
