@@ -42,7 +42,7 @@ function GovernancePage() {
           {[
             "المزارعون والمنتجون المحليون",
             "الشباب والخريجون",
-            "الجهات الشريكة والمستثمرون الاجتماعيون",
+            "الجهات الشريكة والمساهمون الاجتماعيون",
           ].map((s) => (
             <div key={s} className="rounded-lg border border-border bg-card p-5 text-center">
               <p className="font-semibold text-foreground">{s}</p>
