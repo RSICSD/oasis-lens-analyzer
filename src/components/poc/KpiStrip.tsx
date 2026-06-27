@@ -1,7 +1,11 @@
 import type { PocSnapshot } from "@/lib/poc-data";
 import { Banknote, CheckCircle2, CalendarClock, FileCheck2 } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export function KpiStrip({ data }: { data: PocSnapshot }) {
+  const { lang, t } = useI18n();
+  const numLocale = lang === "ar" ? "ar-EG" : "en-US";
+
   const allocated = data.funding.reduce((s, f) => s + f.allocated_usd, 0);
   const received = data.funding.reduce((s, f) => s + f.received_usd, 0);
   const fundingPct = allocated > 0 ? Math.round((received / allocated) * 100) : 0;
@@ -11,7 +15,6 @@ export function KpiStrip({ data }: { data: PocSnapshot }) {
     ? Math.round((wpDone / data.work_packages.length) * 100)
     : 0;
 
-  // simple plan adherence: average (actual_end vs planned_end) delta for done wps, in days
   const done = data.work_packages.filter((w) => w.status === "done" && w.actual_end);
   const avgDelta = done.length
     ? Math.round(
@@ -26,32 +29,39 @@ export function KpiStrip({ data }: { data: PocSnapshot }) {
 
   const docs = data.documents.length;
 
+  const scheduleValue =
+    avgDelta === 0
+      ? t("poc.kpi.schedule.onTime")
+      : avgDelta > 0
+        ? t("poc.kpi.schedule.late", { n: avgDelta })
+        : t("poc.kpi.schedule.early", { n: Math.abs(avgDelta) });
+
   const cards = [
     {
-      label: "نسبة التمويل المستلم",
+      label: t("poc.kpi.funding"),
       value: `${fundingPct}%`,
-      sub: `${received.toLocaleString("ar-EG")} / ${allocated.toLocaleString("ar-EG")} دولار`,
+      sub: t("poc.kpi.funding.sub", { r: received.toLocaleString(numLocale), a: allocated.toLocaleString(numLocale) }),
       Icon: Banknote,
       color: "text-primary",
     },
     {
-      label: "نسبة الإنجاز",
+      label: t("poc.kpi.progress"),
       value: `${wpPct}%`,
-      sub: `${wpDone} من ${data.work_packages.length} حزمة عمل`,
+      sub: t("poc.kpi.progress.sub", { d: wpDone, t: data.work_packages.length }),
       Icon: CheckCircle2,
       color: "text-primary",
     },
     {
-      label: "الالتزام بالجدول الزمني",
-      value: avgDelta === 0 ? "في الموعد" : `${Math.abs(avgDelta)} يوم ${avgDelta > 0 ? "تأخير" : "تقدم"}`,
-      sub: "متوسط الفارق للحزم المنجزة",
+      label: t("poc.kpi.schedule"),
+      value: scheduleValue,
+      sub: t("poc.kpi.schedule.sub"),
       Icon: CalendarClock,
       color: avgDelta > 5 ? "text-destructive" : "text-primary",
     },
     {
-      label: "الوثائق الموقّعة",
+      label: t("poc.kpi.docs"),
       value: String(docs),
-      sub: "اتفاقيات ومذكرات وعقود",
+      sub: t("poc.kpi.docs.sub"),
       Icon: FileCheck2,
       color: "text-primary",
     },

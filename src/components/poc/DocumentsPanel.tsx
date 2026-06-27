@@ -1,12 +1,14 @@
 import type { PocSnapshot } from "@/lib/poc-data";
 import { FileText, ExternalLink } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
 
 export function DocumentsPanel({ data }: { data: PocSnapshot }) {
+  const { t } = useI18n();
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      <h3 className="font-display text-lg font-bold text-primary">الوثائق والاتفاقيات</h3>
+      <h3 className="font-display text-lg font-bold text-primary">{t("poc.documents")}</h3>
       {data.documents.length === 0 ? (
-        <p className="mt-4 text-sm text-muted-foreground">لا توجد وثائق منشورة بعد.</p>
+        <p className="mt-4 text-sm text-muted-foreground">{t("poc.documents.empty")}</p>
       ) : (
         <ul className="mt-4 space-y-2">
           {data.documents.map((d) => (

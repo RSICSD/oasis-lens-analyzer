@@ -6,7 +6,8 @@ import { z } from "zod";
 import { RefreshCw, Radio } from "lucide-react";
 import { PageShell, PageHeader } from "@/components/layout/PageShell";
 import { pocQueryOptions, type PocSnapshot, type Unit } from "@/lib/poc-data";
-import { pocConfig } from "@/lib/site";
+import { pickLocality } from "@/lib/site";
+import { useI18n } from "@/lib/i18n";
 import { KpiStrip } from "@/components/poc/KpiStrip";
 import { FundingPanel } from "@/components/poc/FundingPanel";
 import { MilestonesPanel } from "@/components/poc/MilestonesPanel";
@@ -22,27 +23,21 @@ const pocSearchSchema = z.object({
     z.enum(["agreement", "due_diligence", "mou", "procurement", "civil", "training"]).optional(),
     undefined,
   ),
-  status: fallback(
-    z.enum(["planned", "in_progress", "done", "blocked"]).optional(),
-    undefined,
-  ),
+  status: fallback(z.enum(["planned", "in_progress", "done", "blocked"]).optional(), undefined),
 });
 
 export const Route = createFileRoute("/poc")({
   validateSearch: zodValidator(pocSearchSchema),
   head: () => ({
     meta: [
-      { title: "لوحة تحكم مشروع إثبات المفهوم — البرقيق | RSIC" },
+      { title: "Proof-of-Concept Dashboard — Al-Bergig | RSIC" },
       {
         name: "description",
         content:
-          "لوحة شفافية لحظية لتتبع تقدّم المصنع الرائد في محلية البرقيق: التمويل، حزم العمل، الجدول الزمني، ونموذج ثلاثي الأبعاد تفاعلي للمجمّع.",
+          "Live transparency dashboard for the flagship factory in Al-Bergig: funding, work packages, schedule, and an interactive 3D complex model.",
       },
-      { property: "og:title", content: "لوحة تحكم مشروع إثبات المفهوم — البرقيق" },
-      {
-        property: "og:description",
-        content: "نموذج ثلاثي الأبعاد ومؤشرات لحظية لتقدّم أول مصنع في مبادرة RSIC.",
-      },
+      { property: "og:title", content: "Proof-of-Concept Dashboard — Al-Bergig" },
+      { property: "og:description", content: "Interactive 3D model and live KPIs for RSIC's first factory." },
       { property: "og:url", content: "/poc" },
     ],
     links: [{ rel: "canonical", href: "/poc" }],
@@ -71,7 +66,6 @@ function applyFilters(
   const docs = data.documents.filter((d) => {
     if (!wpIds.has(d.work_package_id)) return false;
     if (needle && !`${d.title_ar} ${d.type}`.toLowerCase().includes(needle)) {
-      // keep doc if its WP matched even when needle doesn't hit doc text
       return wpIds.has(d.work_package_id);
     }
     return true;
@@ -85,12 +79,14 @@ function applyFilters(
 }
 
 function PocPage() {
+  const { lang, t } = useI18n();
   const { data, refetch, isFetching, dataUpdatedAt } = useSuspenseQuery(pocQueryOptions);
   const search = Route.useSearch();
   const q = search.q ?? "";
   const category = search.category ?? "all";
   const status = search.status ?? "all";
   const [selected, setSelected] = useState<Unit | null>(null);
+  const loc = pickLocality(lang);
 
   const filtered = useMemo(
     () => applyFilters(data, q, search.category, search.status),
@@ -99,13 +95,14 @@ function PocPage() {
 
   const isFiltered = !!(q || search.category || search.status);
   const matchCount = filtered.work_packages.length;
+  const dateLocale = lang === "ar" ? "ar-EG" : "en-US";
 
   return (
     <PageShell>
       <PageHeader
-        eyebrow="شفافية لحظية"
-        title="لوحة تحكم مشروع إثبات المفهوم"
-        description={`تتبّع تقدّم المصنع الرائد في ${pocConfig.localityNameAr} — ${pocConfig.stateAr}. البيانات تُحدَّث من الميدان عبر Google Sheets.`}
+        eyebrow={t("poc.eyebrow")}
+        title={t("poc.title")}
+        description={`${t("poc.desc.prefix")} ${loc.locality} — ${loc.state}. ${t("poc.desc.suffix")}`}
       />
 
       <section className="mx-auto max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
@@ -113,11 +110,11 @@ function PocPage() {
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Radio className={`h-4 w-4 ${data.source === "sheet" ? "text-primary" : "text-muted-foreground"}`} />
             <span>
-              المصدر: {data.source === "sheet" ? "Google Sheets (حيّ)" : "بيانات تجريبية"}
+              {t("poc.source")}: {data.source === "sheet" ? t("poc.source.sheet") : t("poc.source.fallback")}
             </span>
             <span className="mx-2">·</span>
             <span dir="ltr">
-              آخر تحديث: {new Date(dataUpdatedAt).toLocaleString("ar-EG")}
+              {t("poc.lastUpdate")}: {new Date(dataUpdatedAt).toLocaleString(dateLocale)}
             </span>
           </div>
           <button
@@ -127,7 +124,7 @@ function PocPage() {
             className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-1.5 text-sm hover:border-primary disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${isFetching ? "animate-spin" : ""}`} />
-            تحديث
+            {t("poc.refresh")}
           </button>
         </div>
 
@@ -135,12 +132,8 @@ function PocPage() {
 
         <div className="grid gap-6 lg:grid-cols-5">
           <div className="lg:col-span-3">
-            <h2 className="mb-3 font-display text-xl font-bold text-primary">
-              نموذج المجمّع ثلاثي الأبعاد
-            </h2>
-            <p className="mb-3 text-sm text-muted-foreground">
-              اسحب للدوران، استخدم العجلة للتكبير، وانقر على أي وحدة لعرض تفاصيل حزم العمل والتمويل.
-            </p>
+            <h2 className="mb-3 font-display text-xl font-bold text-primary">{t("poc.three.title")}</h2>
+            <p className="mb-3 text-sm text-muted-foreground">{t("poc.three.hint")}</p>
             <Complex3D units={data.units} onSelect={setSelected} />
           </div>
           <div className="lg:col-span-2 space-y-4">
@@ -148,8 +141,8 @@ function PocPage() {
             {isFiltered && (
               <p className="text-xs text-muted-foreground">
                 {matchCount === 0
-                  ? "لا توجد نتائج مطابقة."
-                  : `عرض ${matchCount} من ${data.work_packages.length} حزمة عمل.`}
+                  ? t("poc.matchNone")
+                  : t("poc.match", { n: matchCount, t: data.work_packages.length })}
               </p>
             )}
             <MilestonesPanel data={filtered} />
