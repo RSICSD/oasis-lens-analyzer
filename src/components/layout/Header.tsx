@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { nav, site } from "@/lib/site";
-import logoAsset from "@/assets/rsic-logo.png.asset.json";
+import logoAsset from "@/assets/rsic-logo-color.png.asset.json";
 
 export function Header() {
   const [open, setOpen] = useState(false);
