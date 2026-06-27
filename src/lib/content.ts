@@ -13,7 +13,7 @@ export const newsByLang: Record<Lang, News[]> = {
     { id: "n3", date: "2026-05-01", title: "ورشة عمل مع مجالس المجتمع المحلي", excerpt: "نقاش نموذج الشركات المجتمعية وآليات الحوكمة الشفافة." },
   ],
   en: [
-    { id: "n1", date: "2026-06-10", title: "Pilot phase launched in Al-Bergig — Northern State", excerpt: "Groundbreaking for the flagship complex and the dates products factory as the first operational unit." },
+    { id: "n1", date: "2026-06-10", title: "Pilot phase launched in Al-Burgig — Northern State", excerpt: "Groundbreaking for the flagship complex and the dates products factory as the first operational unit." },
     { id: "n2", date: "2026-05-22", title: "MoU signed with Wadi El-Neel University", excerpt: "A research partnership to develop quality labs and industrial training centers." },
     { id: "n3", date: "2026-05-01", title: "Workshop with local community councils", excerpt: "Discussion of the community-enterprise model and transparent governance mechanisms." },
   ],
@@ -39,7 +39,7 @@ export const reportsByLang: Record<Lang, Report[]> = {
   ],
   en: [
     { id: "r1", date: "2026-06-01", title: "Initiative Profile Document", description: "A comprehensive overview of the RSIC initiative and its six pillars.", url: "https://www.africau.edu/images/default/sample.pdf", pages: 42 },
-    { id: "r2", date: "2026-04-15", title: "Feasibility Study — Al-Bergig Locality", description: "Economic and social analysis of the flagship complex in the Northern State.", url: "https://www.africau.edu/images/default/sample.pdf", pages: 88 },
+    { id: "r2", date: "2026-04-15", title: "Feasibility Study — Al-Burgig Locality", description: "Economic and social analysis of the flagship complex in the Northern State.", url: "https://www.africau.edu/images/default/sample.pdf", pages: 88 },
   ],
 };
 

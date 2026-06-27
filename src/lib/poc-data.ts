@@ -1,4 +1,4 @@
-// Phase-1 data layer for the Al-Bergig PoC dashboard.
+// Phase-1 data layer for the Al-Burgig PoC dashboard.
 // Reads from a public Google Sheet "Publish to web → CSV" link when configured,
 // otherwise falls back to bundled JSON so the page always renders.
 //

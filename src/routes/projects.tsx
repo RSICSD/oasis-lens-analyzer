@@ -7,7 +7,7 @@ export const Route = createFileRoute("/projects")({
   head: () => ({
     meta: [
       { title: "Model & Flagship Factories — RSIC" },
-      { name: "description", content: "The RSIC pilot model in Al-Bergig — flagship dates, animal feed, and organic fertilizer factories." },
+      { name: "description", content: "The RSIC pilot model in Al-Burgig — flagship dates, animal feed, and organic fertilizer factories." },
       { property: "og:title", content: "Model & Flagship Factories — RSIC" },
       { property: "og:description", content: "The RSIC pilot model and flagship factories in the Northern State." },
       { property: "og:url", content: "/projects" },
@@ -20,7 +20,7 @@ export const Route = createFileRoute("/projects")({
           "@context": "https://schema.org",
           "@type": "ItemList",
           name: "RSIC Flagship Factories",
-          description: "Flagship factories of the pilot complex in Al-Bergig, Northern State.",
+          description: "Flagship factories of the pilot complex in Al-Burgig, Northern State.",
           itemListElement: pilotFactoriesByLang.ar.map((p) => ({
             "@type": "ListItem",
             position: p.rank,
@@ -29,7 +29,7 @@ export const Route = createFileRoute("/projects")({
               name: p.name,
               alternateName: p.nameEn,
               description: p.note,
-              location: { "@type": "Place", name: "Al-Bergig Locality, Northern State, Sudan" },
+              location: { "@type": "Place", name: "Al-Burgig Locality, Northern State, Sudan" },
             },
           })),
         }),
@@ -60,7 +60,7 @@ const rolloutByLang: Record<Lang, { n: string; t: string; d: string }[]> = {
     { n: "04", t: "التوسع على مستوى الأمة", d: "نقل النموذج إلى دول الجنوب المماثلة في الموارد والتحديات." },
   ],
   en: [
-    { n: "01", t: "Pilot phase", d: "Launch the pilot complex in Al-Bergig and validate the technical and financial proposal." },
+    { n: "01", t: "Pilot phase", d: "Launch the pilot complex in Al-Burgig and validate the technical and financial proposal." },
     { n: "02", t: "State-level diversification", d: "Roll out complexes across other states based on lessons from the pilot." },
     { n: "03", t: "National rollout", d: "Establish 378 complexes (2–3 per locality across the 189 localities), ~17,010 factories total." },
     { n: "04", t: "Nation-scale expansion", d: "Transfer the model to Global South countries with similar resources and challenges." },

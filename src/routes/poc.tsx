@@ -30,13 +30,13 @@ export const Route = createFileRoute("/poc")({
   validateSearch: zodValidator(pocSearchSchema),
   head: () => ({
     meta: [
-      { title: "Proof-of-Concept Dashboard — Al-Bergig | RSIC" },
+      { title: "Proof-of-Concept Dashboard — Al-Burgig | RSIC" },
       {
         name: "description",
         content:
-          "Live transparency dashboard for the flagship factory in Al-Bergig: funding, work packages, schedule, and an interactive 3D complex model.",
+          "Live transparency dashboard for the flagship factory in Al-Burgig: funding, work packages, schedule, and an interactive 3D complex model.",
       },
-      { property: "og:title", content: "Proof-of-Concept Dashboard — Al-Bergig" },
+      { property: "og:title", content: "Proof-of-Concept Dashboard — Al-Burgig" },
       { property: "og:description", content: "Interactive 3D model and live KPIs for RSIC's first factory." },
       { property: "og:url", content: "/poc" },
     ],

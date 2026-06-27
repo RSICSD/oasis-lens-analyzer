@@ -121,7 +121,7 @@ const dict: Dict = {
   "projects.eyebrow": { ar: "النموذج والمصانع", en: "Model & Factories" },
   "projects.title": {
     ar: "النموذج الأولي — محلية البرقيق، الشمالية",
-    en: "The pilot model — Al-Bergig Locality, Northern State",
+    en: "The pilot model — Al-Burgig Locality, Northern State",
   },
   "projects.desc": {
     ar: "تبدأ المبادرة بـ 7 مصانع متكاملة في الشمالية، يتقدمها مصنع التمور الرائد، كنموذج محسوب وقابل للتوسع.",
