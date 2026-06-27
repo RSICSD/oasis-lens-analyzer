@@ -1,7 +1,8 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Progress } from "@/components/ui/progress";
 import type { PocSnapshot, Unit } from "@/lib/poc-data";
-import { statusLabelAr, wpStatusLabelAr, categoryLabelAr } from "./status";
+import { useStatusLabels } from "./status";
+import { useI18n } from "@/lib/i18n";
 import { FileText, ExternalLink } from "lucide-react";
 
 export function UnitDetailDrawer({
@@ -13,6 +14,8 @@ export function UnitDetailDrawer({
   data: PocSnapshot;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { status, wpStatus, category } = useStatusLabels();
+  const { t } = useI18n();
   const open = !!unit;
   const wps = unit ? data.work_packages.filter((w) => w.unit_id === unit.id) : [];
   const docs = unit
@@ -27,15 +30,13 @@ export function UnitDetailDrawer({
       <SheetContent side="left" className="w-full overflow-y-auto sm:max-w-md">
         <SheetHeader className="text-start">
           <SheetTitle className="text-primary">{unit?.name_ar}</SheetTitle>
-          <SheetDescription>
-            {unit ? statusLabelAr[unit.status] : ""}
-          </SheetDescription>
+          <SheetDescription>{unit ? status[unit.status] : ""}</SheetDescription>
         </SheetHeader>
 
         {unit && (
           <div className="mt-6 space-y-6">
             <div className="rounded-lg border border-border bg-secondary/40 p-4">
-              <p className="text-xs text-muted-foreground">التمويل</p>
+              <p className="text-xs text-muted-foreground">{t("poc.drawer.funding")}</p>
               <p className="mt-1 text-lg font-bold text-primary" dir="ltr">
                 ${received.toLocaleString()} / ${allocated.toLocaleString()}
               </p>
@@ -46,22 +47,20 @@ export function UnitDetailDrawer({
             </div>
 
             <div>
-              <h4 className="font-display text-sm font-bold text-primary">حزم العمل</h4>
+              <h4 className="font-display text-sm font-bold text-primary">{t("poc.drawer.wps")}</h4>
               <ul className="mt-3 space-y-3">
                 {wps.length === 0 && (
-                  <li className="text-sm text-muted-foreground">لا توجد حزم عمل مرتبطة.</li>
+                  <li className="text-sm text-muted-foreground">{t("poc.drawer.wps.empty")}</li>
                 )}
                 {wps.map((wp) => (
                   <li key={wp.id} className="rounded-lg border border-border bg-card p-3">
                     <div className="flex items-baseline justify-between gap-2 text-sm">
                       <span className="font-medium">{wp.name_ar}</span>
                       <span className="text-xs text-muted-foreground">
-                        {wpStatusLabelAr[wp.status]} · {wp.progress_pct}%
+                        {wpStatus[wp.status]} · {wp.progress_pct}%
                       </span>
                     </div>
-                    <p className="mt-1 text-xs text-muted-foreground">
-                      {categoryLabelAr[wp.category]}
-                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">{category[wp.category]}</p>
                     <Progress value={wp.progress_pct} className="mt-2 h-1.5" />
                   </li>
                 ))}
@@ -70,7 +69,7 @@ export function UnitDetailDrawer({
 
             {docs.length > 0 && (
               <div>
-                <h4 className="font-display text-sm font-bold text-primary">الوثائق</h4>
+                <h4 className="font-display text-sm font-bold text-primary">{t("poc.drawer.docs")}</h4>
                 <ul className="mt-3 space-y-2">
                   {docs.map((d) => (
                     <li key={d.id}>

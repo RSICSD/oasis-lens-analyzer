@@ -1,8 +1,9 @@
 import type { PocSnapshot } from "@/lib/poc-data";
 import { Progress } from "@/components/ui/progress";
-import { categoryLabelAr } from "./status";
+import { useStatusLabels } from "./status";
 
 export function FundingPanel({ data }: { data: PocSnapshot }) {
+  const { category } = useStatusLabels();
   const fundMap = new Map(data.funding.map((f) => [f.work_package_id, f]));
   const byCat = new Map<string, typeof data.work_packages>();
   for (const wp of data.work_packages) {
@@ -16,7 +17,7 @@ export function FundingPanel({ data }: { data: PocSnapshot }) {
       {Array.from(byCat.entries()).map(([cat, wps]) => (
         <div key={cat} className="rounded-xl border border-border bg-card p-5">
           <h3 className="font-display text-lg font-bold text-primary">
-            {categoryLabelAr[cat as keyof typeof categoryLabelAr] ?? cat}
+            {category[cat as keyof typeof category] ?? cat}
           </h3>
           <div className="mt-4 space-y-4">
             {wps.map((wp) => {

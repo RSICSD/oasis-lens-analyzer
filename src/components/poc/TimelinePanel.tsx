@@ -1,6 +1,8 @@
 import type { PocSnapshot } from "@/lib/poc-data";
+import { useI18n } from "@/lib/i18n";
 
 export function TimelinePanel({ data }: { data: PocSnapshot }) {
+  const { t } = useI18n();
   const all = data.work_packages.flatMap((w) => [
     new Date(w.planned_start).getTime(),
     new Date(w.planned_end).getTime(),
@@ -11,11 +13,11 @@ export function TimelinePanel({ data }: { data: PocSnapshot }) {
   const max = Math.max(...all);
   const span = Math.max(max - min, 1);
 
-  const pct = (t: number) => ((t - min) / span) * 100;
+  const pct = (tm: number) => ((tm - min) / span) * 100;
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      <h3 className="font-display text-lg font-bold text-primary">الجدول الزمني (مخطط / فعلي)</h3>
+      <h3 className="font-display text-lg font-bold text-primary">{t("poc.timeline")}</h3>
       <div className="mt-4 space-y-3">
         {data.work_packages.map((wp) => {
           const ps = new Date(wp.planned_start).getTime();
@@ -34,13 +36,13 @@ export function TimelinePanel({ data }: { data: PocSnapshot }) {
                 <div
                   className="absolute top-0.5 h-2 rounded bg-muted-foreground/40"
                   style={{ insetInlineStart: `${pct(ps)}%`, width: `${pct(pe) - pct(ps)}%` }}
-                  title="مخطط"
+                  title={t("poc.timeline.planned")}
                 />
                 {as && ae && (
                   <div
                     className="absolute bottom-0.5 h-2 rounded bg-primary"
                     style={{ insetInlineStart: `${pct(as)}%`, width: `${Math.max(pct(ae) - pct(as), 0.5)}%` }}
-                    title="فعلي"
+                    title={t("poc.timeline.actual")}
                   />
                 )}
               </div>
@@ -49,8 +51,8 @@ export function TimelinePanel({ data }: { data: PocSnapshot }) {
         })}
       </div>
       <div className="mt-4 flex flex-wrap gap-4 text-xs text-muted-foreground">
-        <span className="flex items-center gap-2"><span className="h-2 w-4 rounded bg-muted-foreground/40" />مخطط</span>
-        <span className="flex items-center gap-2"><span className="h-2 w-4 rounded bg-primary" />فعلي</span>
+        <span className="flex items-center gap-2"><span className="h-2 w-4 rounded bg-muted-foreground/40" />{t("poc.timeline.planned")}</span>
+        <span className="flex items-center gap-2"><span className="h-2 w-4 rounded bg-primary" />{t("poc.timeline.actual")}</span>
       </div>
     </div>
   );

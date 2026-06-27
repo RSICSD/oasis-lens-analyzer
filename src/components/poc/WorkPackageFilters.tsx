@@ -1,6 +1,7 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Search, X } from "lucide-react";
-import { categoryLabelAr, statusLabelAr } from "./status";
+import { useStatusLabels } from "./status";
+import { useI18n } from "@/lib/i18n";
 import type { WpCategory, WpStatus } from "@/lib/poc-data";
 
 type PocSearch = {
@@ -29,6 +30,8 @@ export function WorkPackageFilters({
   status: WpStatus | "all";
 }) {
   const navigate = useNavigate({ from: "/poc" });
+  const { category: catLabel, status: statusLabel } = useStatusLabels();
+  const { t } = useI18n();
   const hasActive = q || category !== "all" || status !== "all";
 
   return (
@@ -42,7 +45,7 @@ export function WorkPackageFilters({
             onChange={(e) =>
               navigate({ search: (prev: PocSearch) => ({ ...prev, q: e.target.value || undefined }) })
             }
-            placeholder="ابحث في حزم العمل والوثائق..."
+            placeholder={t("poc.filter.search")}
             className="w-full rounded-md border border-input bg-background px-3 py-2 pe-9 text-sm outline-none focus:border-primary"
           />
         </div>
@@ -59,10 +62,10 @@ export function WorkPackageFilters({
           }
           className="rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
         >
-          <option value="all">كل الفئات</option>
+          <option value="all">{t("poc.filter.allCat")}</option>
           {categories.map((c) => (
             <option key={c} value={c}>
-              {categoryLabelAr[c]}
+              {catLabel[c]}
             </option>
           ))}
         </select>
@@ -79,10 +82,10 @@ export function WorkPackageFilters({
           }
           className="rounded-md border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary"
         >
-          <option value="all">كل الحالات</option>
+          <option value="all">{t("poc.filter.allStatus")}</option>
           {statuses.map((s) => (
             <option key={s} value={s}>
-              {statusLabelAr[s]}
+              {statusLabel[s]}
             </option>
           ))}
         </select>
@@ -96,7 +99,7 @@ export function WorkPackageFilters({
             className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-2 text-sm text-muted-foreground hover:border-primary hover:text-primary"
           >
             <X className="h-3.5 w-3.5" />
-            مسح
+            {t("poc.filter.clear")}
           </button>
         )}
       </div>

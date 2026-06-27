@@ -1,7 +1,8 @@
 import type { PocSnapshot } from "@/lib/poc-data";
 import { Progress } from "@/components/ui/progress";
 import { CheckCircle2, Circle, Clock, AlertTriangle } from "lucide-react";
-import { wpStatusLabelAr } from "./status";
+import { useStatusLabels } from "./status";
+import { useI18n } from "@/lib/i18n";
 
 const icon = {
   done: CheckCircle2,
@@ -18,9 +19,11 @@ const tone = {
 } as const;
 
 export function MilestonesPanel({ data }: { data: PocSnapshot }) {
+  const { wpStatus } = useStatusLabels();
+  const { t } = useI18n();
   return (
     <div className="rounded-xl border border-border bg-card p-5">
-      <h3 className="font-display text-lg font-bold text-primary">المعالم الرئيسية</h3>
+      <h3 className="font-display text-lg font-bold text-primary">{t("poc.milestones")}</h3>
       <ul className="mt-4 divide-y divide-border">
         {data.work_packages.map((wp) => {
           const Icon = icon[wp.status];
@@ -31,7 +34,7 @@ export function MilestonesPanel({ data }: { data: PocSnapshot }) {
                 <div className="flex items-baseline justify-between gap-2">
                   <span className="text-sm font-medium text-foreground">{wp.name_ar}</span>
                   <span className="text-xs text-muted-foreground">
-                    {wpStatusLabelAr[wp.status]} · {wp.progress_pct}%
+                    {wpStatus[wp.status]} · {wp.progress_pct}%
                   </span>
                 </div>
                 <Progress value={wp.progress_pct} className="mt-2 h-1.5" />
