@@ -39,7 +39,7 @@ export const nav = [
 // Phase-1 PoC dashboard config.
 export const pocConfig = {
   localityNameAr: "محلية البرقيق",
-  localityNameEn: "Al-Bergig Locality",
+  localityNameEn: "Al-Burgig Locality",
   stateAr: "الولاية الشمالية",
   stateEn: "Northern State",
   sheetCsvUrl: import.meta.env.VITE_POC_SHEET_CSV_URL ?? "",

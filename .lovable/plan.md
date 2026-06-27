@@ -1,6 +1,6 @@
-# لوحة تحكم مشروع إثبات المفهوم — Al-Bergig PoC Dashboard
+# لوحة تحكم مشروع إثبات المفهوم — Al-Burgig PoC Dashboard
 
-Add an 8th navigation item linking to a new public route `/poc` that visualizes Al-Bergig's first-factory progress, fed by a public Google Sheet (CSV) and an interactive 3D complex map built with React Three Fiber.
+Add an 8th navigation item linking to a new public route `/poc` that visualizes Al-Burgig's first-factory progress, fed by a public Google Sheet (CSV) and an interactive 3D complex map built with React Three Fiber.
 
 ## 1. Navigation & route
 
@@ -41,7 +41,7 @@ All copy in Arabic, layout RTL, styled with existing teal/gold tokens.
 
 - Install `three`, `@react-three/fiber`, `@react-three/drei`.
 - `Complex3D.tsx`:
-  - `<Canvas>` with `OrbitControls`, soft lighting, ground plane styled as the Al-Bergig site.
+  - `<Canvas>` with `OrbitControls`, soft lighting, ground plane styled as the Al-Burgig site.
   - Renders one `<Unit>` per unit from `units` data, positioned at `(x,y,z)`.
   - Each `<Unit>` loads its GLB via `useGLTF` from `/models/units/{type}.glb` (CDN-served via asset pointers).
   - Dynamic state: emissive color / outline reflects status — planned (gray), in_progress (teal `#077a75` glow), done (gold `#ca943f`), blocked (red).
@@ -55,7 +55,7 @@ All copy in Arabic, layout RTL, styled with existing teal/gold tokens.
 
 ## 5. Work packages (defaults)
 
-User didn't specify, so seed `poc-fallback.json` with a sensible Al-Bergig set we can edit later:
+User didn't specify, so seed `poc-fallback.json` with a sensible Al-Burgig set we can edit later:
 - اتفاقية تخصيص الأرض (Land allocation MoU)
 - العناية الواجبة الفنية والمالية (Technical & financial due diligence)
 - مذكرة تفاهم مع السلطة المحلية (Local authority MoU)
