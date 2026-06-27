@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
 import { nav, site } from "@/lib/site";
-import logoAsset from "@/assets/rsic-logo.png.asset.json";
+import logoAsset from "@/assets/rsic-logo-white.png.asset.json";
 
 const socials = [
   { name: "Facebook", href: "https://facebook.com", Icon: Facebook },
