@@ -1,11 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { z } from "zod";
 import { FileText, Download, Calendar, User } from "lucide-react";
 import { PageShell, PageHeader } from "@/components/layout/PageShell";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { articles, reports, news } from "@/lib/content";
 
+const blogSearchSchema = z.object({
+  tab: z.enum(["articles", "reports", "news"]).optional(),
+});
+
 export const Route = createFileRoute("/blog")({
+  validateSearch: blogSearchSchema,
   head: () => ({
     meta: [
       { title: "المدونة — مقالات وتقارير وأخبار RSIC" },
