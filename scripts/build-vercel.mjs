@@ -36,6 +36,9 @@ cpSync(`${root}/public`, `${out}/static`, { recursive: true });
 cpSync(`${root}/dist/server`, func, { recursive: true });
 
 // ── 4. write Node.js HTTP → Web Fetch bridge ──────────────────────────────────
+// package.json tells Node this directory is ESM (required for import statements)
+writeFileSync(`${func}/package.json`, JSON.stringify({ type: "module" }, null, 2));
+
 writeFileSync(
   `${func}/handler.js`,
   `
@@ -78,7 +81,7 @@ export default async function handler(req, res) {
 writeFileSync(
   `${func}/.vc-config.json`,
   JSON.stringify(
-    { runtime: "nodejs22.x", handler: "handler.js", launcherType: "Nodejs" },
+    { runtime: "nodejs22.x", handler: "handler.js" },
     null,
     2
   )
