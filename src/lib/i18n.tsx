@@ -217,6 +217,7 @@ const dict: Dict = {
   "contact.f.err.name": { ar: "الاسم قصير جداً", en: "Name is too short" },
   "contact.f.err.email": { ar: "بريد إلكتروني غير صالح", en: "Invalid email address" },
   "contact.f.err.message": { ar: "الرسالة قصيرة جداً", en: "Message is too short" },
+  "contact.f.err.generic": { ar: "تعذر إرسال الرسالة، حاول مرة أخرى.", en: "Couldn't send your message — please try again." },
 
   // Donate
   "donate.eyebrow": { ar: "التبرع", en: "Donate" },
@@ -240,6 +241,7 @@ const dict: Dict = {
   "poc.desc.prefix": { ar: "تتبّع تقدّم المصنع الرائد في", en: "Track the flagship factory's progress in" },
   "poc.desc.suffix": { ar: "البيانات تُحدَّث من الميدان عبر Google Sheets.", en: "Data is updated from the field via Google Sheets." },
   "poc.source": { ar: "المصدر", en: "Source" },
+  "poc.source.supabase": { ar: "قاعدة بيانات حيّة", en: "Live database" },
   "poc.source.sheet": { ar: "Google Sheets (حيّ)", en: "Google Sheets (live)" },
   "poc.source.fallback": { ar: "بيانات تجريبية", en: "Sample data" },
   "poc.lastUpdate": { ar: "آخر تحديث", en: "Last updated" },

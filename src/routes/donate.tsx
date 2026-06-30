@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { PageShell, PageHeader } from "@/components/layout/PageShell";
 import { useI18n } from "@/lib/i18n";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/donate")({
   head: () => ({
@@ -24,8 +25,22 @@ function DonatePage() {
   const [amount, setAmount] = useState<number>(250);
   const [custom, setCustom] = useState<string>("");
   const [recurring, setRecurring] = useState<"once" | "monthly">("once");
+  const [submitting, setSubmitting] = useState(false);
 
   const final = custom ? Number(custom) : amount;
+
+  async function handleContinue() {
+    if (!final || final < 10) return;
+    setSubmitting(true);
+    const { error } = await supabase
+      .from("donation_intents")
+      .insert({ amount_usd: final, recurring });
+    setSubmitting(false);
+    if (error) {
+      console.error("[donate] failed to record intent", error);
+    }
+    // Payment gateway activates once Stripe is connected — see donate.note.
+  }
 
   return (
     <PageShell>
@@ -98,7 +113,8 @@ function DonatePage() {
 
           <button
             type="button"
-            disabled={!final || final < 10}
+            onClick={handleContinue}
+            disabled={!final || final < 10 || submitting}
             className="mt-6 w-full rounded-md bg-accent px-6 py-3.5 text-base font-bold text-accent-foreground transition-transform hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t("donate.continue")}

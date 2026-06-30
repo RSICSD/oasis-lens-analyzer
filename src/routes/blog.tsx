@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import { FileText, Download, Calendar, User } from "lucide-react";
 import { PageShell, PageHeader } from "@/components/layout/PageShell";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { articlesByLang, reportsByLang, newsByLang } from "@/lib/content";
+import { articlesByLang, articlesQueryOptions, reportsQueryOptions, newsQueryOptions } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
 
 const blogSearchSchema = z.object({
@@ -47,8 +48,8 @@ export const Route = createFileRoute("/blog")({
 
 function BlogPage() {
   const { lang, t } = useI18n();
-  const articles = articlesByLang[lang];
-  const news = newsByLang[lang];
+  const { data: articles } = useQuery(articlesQueryOptions(lang));
+  const { data: news } = useQuery(newsQueryOptions(lang));
   const { tab } = Route.useSearch();
   const navigate = Route.useNavigate();
   const activeTab = tab ?? "articles";
@@ -136,7 +137,7 @@ function BlogPage() {
 
 function ReportsViewer() {
   const { lang, t } = useI18n();
-  const reports = reportsByLang[lang];
+  const { data: reports } = useQuery(reportsQueryOptions(lang));
   const [active, setActive] = useState(reports[0]);
 
   // re-sync when language changes

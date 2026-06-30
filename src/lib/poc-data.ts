@@ -1,12 +1,11 @@
-// Phase-1 data layer for the Al-Burgig PoC dashboard.
-// Reads from a public Google Sheet "Publish to web → CSV" link when configured,
-// otherwise falls back to bundled JSON so the page always renders.
-//
-// Future phases: swap fetchPocData() to call a server function / API.
+// Data layer for the Al-Burgig PoC dashboard.
+// Reads from Supabase first, falls back to a public Google Sheet "Publish to
+// web → CSV" link when configured, then to bundled JSON so the page always renders.
 
 import { queryOptions } from "@tanstack/react-query";
 import fallback from "./poc-fallback.json";
 import { pocConfig } from "./site";
+import { supabase } from "./supabase";
 
 export type UnitType = "mill" | "silo" | "packaging" | "admin" | "training" | "energy";
 export type UnitStatus = "planned" | "in_progress" | "done" | "blocked";
@@ -63,7 +62,7 @@ export interface PocSnapshot {
   work_packages: WorkPackage[];
   funding: Funding[];
   documents: PocDocument[];
-  source: "sheet" | "fallback";
+  source: "supabase" | "sheet" | "fallback";
 }
 
 function parseCsv(text: string): Record<string, string>[] {
@@ -165,10 +164,33 @@ async function fetchSheet(url: string): Promise<PocSnapshot | null> {
   }
 }
 
+async function fetchFromSupabase(): Promise<PocSnapshot | null> {
+  const [units, wps, funding, docs] = await Promise.all([
+    supabase.from("poc_units").select("*"),
+    supabase.from("poc_work_packages").select("*"),
+    supabase.from("poc_funding").select("*"),
+    supabase.from("poc_documents").select("*"),
+  ]);
+  if (units.error || wps.error || funding.error || docs.error) return null;
+  if (!units.data?.length && !wps.data?.length) return null;
+
+  return {
+    lastUpdated: new Date().toISOString(),
+    units: units.data as Unit[],
+    work_packages: wps.data as WorkPackage[],
+    funding: funding.data as Funding[],
+    documents: docs.data as PocDocument[],
+    source: "supabase",
+  };
+}
+
 export async function fetchPocData(): Promise<PocSnapshot> {
+  const live = await fetchFromSupabase();
+  if (live) return live;
+
   if (pocConfig.sheetCsvUrl) {
-    const live = await fetchSheet(pocConfig.sheetCsvUrl);
-    if (live) return live;
+    const sheet = await fetchSheet(pocConfig.sheetCsvUrl);
+    if (sheet) return sheet;
   }
   return { ...(fallback as Omit<PocSnapshot, "source">), source: "fallback" };
 }

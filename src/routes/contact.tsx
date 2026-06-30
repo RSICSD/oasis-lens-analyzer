@@ -4,6 +4,7 @@ import { z } from "zod";
 import { PageShell, PageHeader } from "@/components/layout/PageShell";
 import { site } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -30,13 +31,14 @@ function ContactPage() {
     message: z.string().trim().min(10, t("contact.f.err.message")).max(2000),
   });
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const form = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const data = new FormData(form);
     const parsed = schema.safeParse({
-      name: form.get("name"),
-      email: form.get("email"),
-      message: form.get("message"),
+      name: data.get("name"),
+      email: data.get("email"),
+      message: data.get("message"),
     });
     if (!parsed.success) {
       const fieldErrors: Record<string, string> = {};
@@ -48,8 +50,14 @@ function ContactPage() {
       return;
     }
     setErrors({});
+
+    const { error } = await supabase.from("contact_submissions").insert(parsed.data);
+    if (error) {
+      setStatus("error");
+      return;
+    }
     setStatus("sent");
-    e.currentTarget.reset();
+    form.reset();
   }
 
   return (
@@ -92,6 +100,9 @@ function ContactPage() {
             {t("contact.f.submit")}
           </button>
           {status === "sent" && <p className="text-sm text-primary">{t("contact.f.sent")}</p>}
+          {status === "error" && Object.keys(errors).length === 0 && (
+            <p className="text-sm text-destructive">{t("contact.f.err.generic")}</p>
+          )}
         </form>
       </section>
     </PageShell>

@@ -108,9 +108,14 @@ function PocPage() {
       <section className="mx-auto max-w-7xl space-y-8 px-4 py-10 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Radio className={`h-4 w-4 ${data.source === "sheet" ? "text-primary" : "text-muted-foreground"}`} />
+            <Radio className={`h-4 w-4 ${data.source !== "fallback" ? "text-primary" : "text-muted-foreground"}`} />
             <span>
-              {t("poc.source")}: {data.source === "sheet" ? t("poc.source.sheet") : t("poc.source.fallback")}
+              {t("poc.source")}:{" "}
+              {data.source === "supabase"
+                ? t("poc.source.supabase")
+                : data.source === "sheet"
+                  ? t("poc.source.sheet")
+                  : t("poc.source.fallback")}
             </span>
             <span className="mx-2">·</span>
             <span dir="ltr">

@@ -1,6 +1,10 @@
-// Placeholder bilingual content for blog/news/reports. Will be replaced by a CMS later.
+// Bilingual content for blog/news/reports. Backed by Supabase (news_posts,
+// articles, reports tables); the *ByLang objects below double as the
+// fallback when the database is unreachable and as static SEO data for head().
 
+import { queryOptions } from "@tanstack/react-query";
 import type { Lang } from "./i18n";
+import { supabase } from "./supabase";
 
 type News = { id: string; date: string; title: string; excerpt: string };
 type Article = { id: string; date: string; author: string; title: string; excerpt: string };
@@ -42,6 +46,75 @@ export const reportsByLang: Record<Lang, Report[]> = {
     { id: "r2", date: "2026-04-15", title: "Feasibility Study — Al-Burgig Locality", description: "Economic and social analysis of the flagship complex in the Northern State.", url: "https://www.africau.edu/images/default/sample.pdf", pages: 88 },
   ],
 };
+
+async function fetchNews(lang: Lang): Promise<News[]> {
+  const { data, error } = await supabase
+    .from("news_posts")
+    .select("*")
+    .order("date", { ascending: false });
+  if (error || !data?.length) return newsByLang[lang];
+  return data.map((r) => ({
+    id: r.id,
+    date: r.date,
+    title: lang === "ar" ? r.title_ar : r.title_en,
+    excerpt: lang === "ar" ? r.excerpt_ar : r.excerpt_en,
+  }));
+}
+
+async function fetchArticles(lang: Lang): Promise<Article[]> {
+  const { data, error } = await supabase
+    .from("articles")
+    .select("*")
+    .order("date", { ascending: false });
+  if (error || !data?.length) return articlesByLang[lang];
+  return data.map((r) => ({
+    id: r.id,
+    date: r.date,
+    author: lang === "ar" ? r.author_ar : r.author_en,
+    title: lang === "ar" ? r.title_ar : r.title_en,
+    excerpt: lang === "ar" ? r.excerpt_ar : r.excerpt_en,
+  }));
+}
+
+async function fetchReports(lang: Lang): Promise<Report[]> {
+  const { data, error } = await supabase
+    .from("reports")
+    .select("*")
+    .order("date", { ascending: false });
+  if (error || !data?.length) return reportsByLang[lang];
+  return data.map((r) => ({
+    id: r.id,
+    date: r.date,
+    title: lang === "ar" ? r.title_ar : r.title_en,
+    description: lang === "ar" ? r.description_ar : r.description_en,
+    url: r.url,
+    pages: r.pages,
+  }));
+}
+
+export const newsQueryOptions = (lang: Lang) =>
+  queryOptions({
+    queryKey: ["news", lang],
+    queryFn: () => fetchNews(lang),
+    initialData: newsByLang[lang],
+    staleTime: 30_000,
+  });
+
+export const articlesQueryOptions = (lang: Lang) =>
+  queryOptions({
+    queryKey: ["articles", lang],
+    queryFn: () => fetchArticles(lang),
+    initialData: articlesByLang[lang],
+    staleTime: 30_000,
+  });
+
+export const reportsQueryOptions = (lang: Lang) =>
+  queryOptions({
+    queryKey: ["reports", lang],
+    queryFn: () => fetchReports(lang),
+    initialData: reportsByLang[lang],
+    staleTime: 30_000,
+  });
 
 export const social = [
   { name: "Facebook", href: "https://facebook.com", icon: "facebook" },

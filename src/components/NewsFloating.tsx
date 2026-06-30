@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Newspaper, X } from "lucide-react";
-import { newsByLang } from "@/lib/content";
+import { newsQueryOptions } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
 
 export function NewsFloating() {
   const { lang, t } = useI18n();
-  const news = newsByLang[lang];
+  const { data: news } = useQuery(newsQueryOptions(lang));
   const [open, setOpen] = useState(false);
 
   return (

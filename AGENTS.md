@@ -1,10 +1,12 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
+# RSIC — Agent Guidelines
+
+This project uses **Claude Code** for AI-assisted development.
+
+## Conventions
+
+- RTL-first: the UI is Arabic/RTL by default. All bilingual strings belong in `src/lib/site.ts` or `src/lib/content.ts`.
+- Use `src/lib/supabase.ts` for all Supabase access — `supabase` for client-side, `createSupabaseServerClient` for server loaders.
+- File-based routing via TanStack Router — add new pages under `src/routes/`.
+- Components follow shadcn/ui patterns. Add new primitives to `src/components/ui/`.
+- Tailwind CSS v4 — no `@apply` in component files; use utility classes directly.
+- Avoid force-pushing or rewriting published git history.
