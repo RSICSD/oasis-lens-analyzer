@@ -10,10 +10,10 @@
  *       __nitro.func/              – Node.js serverless function
  *         .vc-config.json
  *         handler.js               – Node HTTP → Web Fetch bridge
- *         server.js                – TanStack Start SSR entry
- *         assets/                  – server chunk assets
+ *         server.js                – esbuild-bundled SSR (all npm deps included)
  */
 
+import { execSync } from "node:child_process";
 import { cpSync, mkdirSync, writeFileSync, rmSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -32,8 +32,27 @@ mkdirSync(func, { recursive: true });
 cpSync(`${root}/dist/client/assets`, `${out}/static/assets`, { recursive: true });
 cpSync(`${root}/public`, `${out}/static`, { recursive: true });
 
-// ── 3. copy server bundle into the function directory ─────────────────────────
-cpSync(`${root}/dist/server`, func, { recursive: true });
+// ── 3. bundle server + all npm deps into one self-contained ESM file ──────────
+// The Vite SSR output has external npm imports (@supabase/*, @tanstack/*, etc.)
+// that won't resolve in a serverless function without node_modules. esbuild
+// re-bundles everything into a single file so the function needs no node_modules.
+console.log("Bundling server...");
+execSync(
+  [
+    `"${root}/node_modules/.bin/esbuild"`,
+    `"${root}/dist/server/server.js"`,
+    "--bundle",
+    "--format=esm",
+    "--platform=node",
+    "--target=node22",
+    "--minify",
+    `"--external:node:*"`,
+    `"--outfile=${func}/server.js"`,
+    "--log-level=warning",
+  ].join(" "),
+  { stdio: "inherit", cwd: root }
+);
+console.log("Server bundled.");
 
 // ── 4. write Node.js HTTP → Web Fetch bridge ──────────────────────────────────
 // package.json tells Node this directory is ESM (required for import statements)
