@@ -42,12 +42,12 @@ execSync(
     `"${root}/node_modules/.bin/esbuild"`,
     `"${root}/dist/server/server.js"`,
     "--bundle",
-    "--format=esm",
+    "--format=cjs",   // CJS so dynamic require() inside packages works
     "--platform=node",
     "--target=node22",
     "--minify",
     `"--external:node:*"`,
-    `"--outfile=${func}/server.js"`,
+    `"--outfile=${func}/server.cjs"`,
     "--log-level=warning",
   ].join(" "),
   { stdio: "inherit", cwd: root }
@@ -55,15 +55,15 @@ execSync(
 console.log("Server bundled.");
 
 // ── 4. write Node.js HTTP → Web Fetch bridge ──────────────────────────────────
-// package.json tells Node this directory is ESM (required for import statements)
-writeFileSync(`${func}/package.json`, JSON.stringify({ type: "module" }, null, 2));
+// No "type":"module" — CJS handler that require()s the CJS bundle
+writeFileSync(`${func}/package.json`, JSON.stringify({}, null, 2));
 
 writeFileSync(
   `${func}/handler.js`,
-  `
-import serverModule from "./server.js";
+  `"use strict";
+const { default: serverModule } = require("./server.cjs");
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   try {
     const protocol = req.headers["x-forwarded-proto"] || "https";
     const host = req.headers["x-forwarded-host"] || req.headers["host"] || "localhost";
@@ -92,8 +92,8 @@ export default async function handler(req, res) {
     res.statusCode = 500;
     res.end("Internal Server Error");
   }
-}
-`.trimStart()
+};
+`
 );
 
 // ── 5. function config ────────────────────────────────────────────────────────
