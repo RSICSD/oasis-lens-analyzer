@@ -1,71 +1,82 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Phone, Languages } from "lucide-react";
-import { nav, site } from "@/lib/site";
+import { Menu, X, Globe } from "lucide-react";
+import { nav, siteI18n } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
 import logoAsset from "@/assets/rsic-logo-color.png.asset.json";
 
 export function Header() {
   const [open, setOpen] = useState(false);
   const { lang, setLang, t } = useI18n();
-
   const toggleLang = () => setLang(lang === "ar" ? "en" : "ar");
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border/60 bg-background/85 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-        <Link to="/" className="flex items-center gap-2 font-display text-lg font-bold text-primary">
-          <img
-            src={logoAsset.url}
-            alt="RSIC — شعار المجمعات الصناعية الريفية المجتمعية"
-            className="h-10 w-auto"
-          />
-          <span className="hidden sm:inline">{site.nameShort}</span>
+    <header className="sticky top-0 z-40 bg-background/96 backdrop-blur-md border-b border-border/50 shadow-sm">
+      <div className="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+
+        {/* ── Logo ── */}
+        <Link to="/" className="flex shrink-0 items-center gap-3">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 p-1.5 ring-1 ring-primary/20">
+            <img
+              src={logoAsset.url}
+              alt="RSIC"
+              className="h-full w-auto object-contain"
+            />
+          </div>
+          <div className="hidden sm:block leading-none">
+            <p className="font-display text-sm font-bold text-primary">
+              {siteI18n.name[lang]}
+            </p>
+            <p className="mt-0.5 text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+              RSIC
+            </p>
+          </div>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        {/* ── Desktop nav ── */}
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {nav.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="rounded-md px-3 py-2 text-sm font-medium text-foreground/80 transition-colors hover:bg-secondary hover:text-primary"
-              activeProps={{ className: "text-primary bg-secondary" }}
+              className="relative rounded-lg px-3 py-2 text-sm font-medium text-foreground/60 transition-colors hover:bg-primary/8 hover:text-primary"
+              activeProps={{ className: "bg-primary/10 text-primary font-semibold" }}
               activeOptions={{ exact: item.to === "/" }}
             >
               {t(`nav.${item.to}`)}
+              {"live" in item && (item as { live?: boolean }).live && (
+                <span className="absolute end-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-accent" />
+              )}
             </Link>
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
+        {/* ── Actions ── */}
+        <div className="flex shrink-0 items-center gap-2">
+          {/* Language pill */}
           <button
             type="button"
             onClick={toggleLang}
             aria-label={t("lang.aria")}
-            title={t("lang.aria")}
-            className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1.5 text-xs font-bold text-foreground/80 transition-colors hover:bg-secondary hover:text-primary"
+            className="flex items-center gap-1.5 rounded-full border border-border/70 px-3 py-1.5 text-xs font-bold text-foreground/60 transition-all hover:border-primary hover:bg-primary/5 hover:text-primary"
           >
-            <Languages className="h-4 w-4" />
-            <span>{t("lang.toggle")}</span>
+            <Globe className="h-3.5 w-3.5" />
+            {lang === "ar" ? "EN" : "عر"}
           </button>
-          <a
-            href={`tel:${site.phone.replace(/\s+/g, "")}`}
-            className="hidden items-center gap-1.5 text-sm text-muted-foreground hover:text-primary md:flex"
-            aria-label={t("cta.call")}
-          >
-            <Phone className="h-4 w-4" />
-            <span dir="ltr">{site.phone}</span>
-          </a>
+
+          {/* Donate CTA — gold accent */}
           <Link
             to="/donate"
-            className="hidden rounded-md bg-accent px-4 py-2 text-sm font-bold text-accent-foreground transition-transform hover:scale-[1.02] md:inline-flex"
+            className="hidden items-center rounded-full bg-accent px-5 py-2 text-sm font-bold text-accent-foreground shadow-sm transition-opacity hover:opacity-90 md:inline-flex"
           >
             {t("cta.donate")}
           </Link>
+
+          {/* Mobile toggle */}
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="grid h-10 w-10 place-items-center rounded-md border border-border lg:hidden"
+            className="grid h-9 w-9 place-items-center rounded-lg border border-border/70 transition-colors hover:bg-secondary lg:hidden"
             aria-label={open ? t("menu.close") : t("menu.open")}
             aria-expanded={open}
           >
@@ -74,29 +85,36 @@ export function Header() {
         </div>
       </div>
 
+      {/* ── Mobile drawer ── */}
       {open && (
-        <div className="border-t border-border bg-background lg:hidden">
-          <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-3">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setOpen(false)}
-                className="rounded-md px-3 py-2 text-base font-medium text-foreground/80 hover:bg-secondary hover:text-primary"
-                activeProps={{ className: "text-primary bg-secondary" }}
-                activeOptions={{ exact: item.to === "/" }}
-              >
-                {t(`nav.${item.to}`)}
-              </Link>
-            ))}
+        <div className="border-t border-border/60 bg-background lg:hidden">
+          <div className="mx-auto max-w-7xl px-4 pb-5 pt-3">
+            <nav className="flex flex-col gap-0.5">
+              {nav.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setOpen(false)}
+                  className="relative flex items-center rounded-xl px-4 py-3 text-base font-medium text-foreground/70 transition-colors hover:bg-secondary hover:text-primary"
+                  activeProps={{ className: "bg-primary/10 text-primary font-semibold" }}
+                  activeOptions={{ exact: item.to === "/" }}
+                >
+                  {t(`nav.${item.to}`)}
+                  {"live" in item && (item as { live?: boolean }).live && (
+                    <span className="ms-auto h-2 w-2 shrink-0 rounded-full bg-accent" />
+                  )}
+                </Link>
+              ))}
+            </nav>
+
             <Link
               to="/donate"
               onClick={() => setOpen(false)}
-              className="mt-2 rounded-md bg-accent px-3 py-3 text-center text-base font-bold text-accent-foreground"
+              className="mt-4 flex items-center justify-center rounded-xl bg-accent px-4 py-3.5 text-base font-bold text-accent-foreground"
             >
               {t("cta.donate")}
             </Link>
-          </nav>
+          </div>
         </div>
       )}
     </header>
