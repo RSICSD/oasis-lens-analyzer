@@ -113,6 +113,7 @@ writeFileSync(
     {
       version: 3,
       routes: [
+        // Set cache headers for assets, then continue
         {
           src: "^/assets/(.*)$",
           headers: { "cache-control": "public, max-age=31536000, immutable" },
@@ -123,6 +124,9 @@ writeFileSync(
           headers: { "cache-control": "public, max-age=3600" },
           continue: true,
         },
+        // Serve static files from .vercel/output/static/ before hitting the function
+        { handle: "filesystem" },
+        // Everything else goes to the SSR function
         { src: "/(.*)", dest: "/__nitro" },
       ],
     },
