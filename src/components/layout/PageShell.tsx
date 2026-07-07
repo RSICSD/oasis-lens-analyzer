@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import bannerAsset from "@/assets/rsic-banner.jpg.asset.json";
-import { useI18n } from "@/lib/i18n";
+import logoUrl from "@/assets/rsic-logo.png";
 
 export function PageShell({ children }: { children: ReactNode }) {
   return (
@@ -15,18 +14,24 @@ export function PageShell({ children }: { children: ReactNode }) {
 }
 
 export function PageBanner() {
-  const { lang } = useI18n();
-  const alt =
-    lang === "ar"
-      ? "مجمع برقيق الصناعي الريفي النموذجي"
-      : "RSIC pilot industrial complex — Al-Burgig";
   return (
-    <div className="w-full overflow-hidden border-b border-border bg-secondary">
+    <div className="relative h-40 w-full overflow-hidden border-b border-border bg-gradient-to-l from-primary via-forest-deep to-graphite sm:h-56 lg:h-64">
+      {/* Subtle dotted grain */}
+      <div
+        className="absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage: "radial-gradient(white 1px, transparent 1px)",
+          backgroundSize: "18px 18px",
+        }}
+      />
+      {/* Gold glow accent */}
+      <div className="absolute -end-16 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-accent/20 blur-3xl" />
+      {/* Logo watermark */}
       <img
-        src={bannerAsset.url}
-        alt={alt}
-        className="h-40 w-full object-cover sm:h-56 lg:h-72"
-        loading="eager"
+        src={logoUrl}
+        alt=""
+        aria-hidden="true"
+        className="absolute end-6 top-1/2 h-32 w-auto -translate-y-1/2 opacity-90 drop-shadow-lg sm:h-40 lg:h-48"
       />
     </div>
   );

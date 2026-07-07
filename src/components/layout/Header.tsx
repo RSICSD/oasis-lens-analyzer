@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Menu, X, Globe } from "lucide-react";
 import { nav, siteI18n } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
-import logoAsset from "@/assets/rsic-logo-color.png.asset.json";
+import logoUrl from "@/assets/rsic-logo.png";
 
 export function Header() {
   const [open, setOpen] = useState(false);
@@ -16,11 +16,13 @@ export function Header() {
 
         {/* ── Logo ── */}
         <Link to="/" className="flex shrink-0 items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 p-1.5 ring-1 ring-primary/20">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white p-1 ring-1 ring-primary/15 shadow-sm">
             <img
-              src={logoAsset.url}
+              src={logoUrl}
               alt="RSIC"
               className="h-full w-auto object-contain"
+              width={800}
+              height={653}
             />
           </div>
           <div className="hidden sm:block leading-none">

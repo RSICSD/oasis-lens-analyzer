@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin, Youtube } from "lucide-react";
 import { nav, site, siteI18n } from "@/lib/site";
 import { useI18n } from "@/lib/i18n";
-import logoAsset from "@/assets/rsic-logo-white.png.asset.json";
+import logoUrl from "@/assets/rsic-logo.png";
 
 const socials = [
   { name: "Facebook", href: "https://facebook.com", Icon: Facebook },
@@ -36,11 +36,15 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-4 lg:px-8">
         <div className="lg:col-span-2">
           <div className="flex items-center gap-3 font-display text-xl font-bold">
-            <img
-              src={logoAsset.url}
-              alt="RSIC — Rural Social Industrial Complexes"
-              className="h-12 w-auto"
-            />
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm">
+              <img
+                src={logoUrl}
+                alt="RSIC — Rural Social Industrial Complexes"
+                className="h-full w-auto object-contain"
+                width={800}
+                height={653}
+              />
+            </span>
             {siteI18n.name[lang]}
           </div>
           <p className="mt-4 max-w-md text-sm leading-loose text-primary-foreground/80">
