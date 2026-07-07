@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Newspaper, X } from "lucide-react";
-import { newsQueryOptions } from "@/lib/content";
+import { newsQueryOptions, formatDate } from "@/lib/content";
 import { useI18n } from "@/lib/i18n";
 
 export function NewsFloating() {
@@ -38,7 +38,7 @@ export function NewsFloating() {
                   className="block p-4 text-start transition-colors hover:bg-secondary/40"
                 >
                   <div className="text-xs text-muted-foreground" dir="ltr">
-                    {n.date}
+                    {formatDate(n.date, lang)}
                   </div>
                   <h4 className="mt-1 text-sm font-bold text-foreground">{n.title}</h4>
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground">

@@ -6,6 +6,17 @@ import { queryOptions } from "@tanstack/react-query";
 import type { Lang } from "./i18n";
 import { supabase } from "./supabase";
 
+/** ISO date → localized long form, e.g. "10 June 2026" / "١٠ يونيو ٢٠٢٦". */
+export function formatDate(iso: string, lang: Lang) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat(lang === "ar" ? "ar" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(d);
+}
+
 type News = { id: string; date: string; title: string; excerpt: string };
 type Article = { id: string; date: string; author: string; title: string; excerpt: string };
 type Report = { id: string; date: string; title: string; description: string; url: string; pages: number };

@@ -216,6 +216,7 @@ const dict: Dict = {
   "contact.f.message": { ar: "الرسالة", en: "Message" },
   "contact.f.submit": { ar: "إرسال", en: "Send" },
   "contact.f.sent": { ar: "تم استلام رسالتك، سنعود إليك قريباً.", en: "Message received — we'll get back to you soon." },
+  "contact.f.again": { ar: "إرسال رسالة أخرى", en: "Send another message" },
   "contact.f.err.name": { ar: "الاسم قصير جداً", en: "Name is too short" },
   "contact.f.err.email": { ar: "بريد إلكتروني غير صالح", en: "Invalid email address" },
   "contact.f.err.message": { ar: "الرسالة قصيرة جداً", en: "Message is too short" },
@@ -236,6 +237,9 @@ const dict: Dict = {
   "donate.summary.once": { ar: "كدفعة واحدة", en: "as a one-time payment" },
   "donate.continue": { ar: "متابعة الدفع الآمن", en: "Continue to secure payment" },
   "donate.note": { ar: "بوابة الدفع ستفعّل عند ربط Stripe — يتطلب موافقتك ضمن المرحلة التالية.", en: "Payment gateway activates once Stripe is connected — requires your approval in the next step." },
+  "donate.thanks.title": { ar: "شكراً لدعمك!", en: "Thank you for your support!" },
+  "donate.thanks.body": { ar: "سجّلنا نيّتك للتبرّع. سنتواصل معك لإتمام الدفع بأمان بمجرد تفعيل بوابة الدفع.", en: "We've recorded your pledge. We'll reach out to complete your secure payment as soon as the gateway is live." },
+  "donate.thanks.again": { ar: "تعديل المبلغ أو التبرّع مرة أخرى", en: "Change amount or pledge again" },
 
   // PoC
   "poc.eyebrow": { ar: "شفافية لحظية", en: "Live transparency" },

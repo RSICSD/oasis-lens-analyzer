@@ -102,9 +102,9 @@ function ProjectsPage() {
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <p className="section-number text-sm">{t("projects.sizing.eyebrow")}</p>
           <h2 className="mt-3 text-2xl font-bold text-primary sm:text-3xl">{t("projects.sizing.title")}</h2>
-          <div className="mt-10 overflow-hidden rounded-lg border border-border bg-card">
-            <table className="w-full text-start">
-              <thead className="bg-secondary text-primary">
+          <div className="mt-10 overflow-x-auto rounded-lg border border-border bg-card">
+            <table className="w-full min-w-[32rem] text-start">
+              <thead className="bg-secondary text-primary [&_th]:text-start">
                 <tr>
                   <th className="px-4 py-3 text-sm font-bold">{t("projects.sizing.col1")}</th>
                   <th className="px-4 py-3 text-sm font-bold">{t("projects.sizing.col2")}</th>

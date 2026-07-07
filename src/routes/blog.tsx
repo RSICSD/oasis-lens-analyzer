@@ -13,19 +13,14 @@ import {
 } from "lucide-react";
 import { PageShell, PageHeader } from "@/components/layout/PageShell";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { articlesByLang, articlesQueryOptions, reportsQueryOptions, newsQueryOptions } from "@/lib/content";
-import { useI18n, type Lang } from "@/lib/i18n";
-
-/** ISO date → localized long form, e.g. "10 June 2026" / "١٠ يونيو ٢٠٢٦". */
-function formatDate(iso: string, lang: Lang) {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return new Intl.DateTimeFormat(lang === "ar" ? "ar" : "en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(d);
-}
+import {
+  articlesByLang,
+  articlesQueryOptions,
+  reportsQueryOptions,
+  newsQueryOptions,
+  formatDate,
+} from "@/lib/content";
+import { useI18n } from "@/lib/i18n";
 
 const blogSearchSchema = z.object({
   tab: z.enum(["articles", "reports", "news"]).optional(),

@@ -109,10 +109,14 @@ function ImpactPage() {
         </div>
       </section>
 
-      <section className="border-t border-border bg-secondary/40">
-        <div className="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden border-t border-border bg-gradient-to-l from-primary via-forest-deep to-graphite text-primary-foreground grain">
+        <div className="absolute -end-16 top-1/2 h-72 w-72 -translate-y-1/2 rounded-full bg-accent/20 blur-3xl" />
+        <div className="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 lg:px-8">
           <p className="section-number text-sm">{t("impact.long.eyebrow")}</p>
-          <h2 className="mt-4 text-2xl font-bold text-primary sm:text-3xl">{t("impact.long.title")}</h2>
+          <h2 className="mx-auto mt-4 max-w-3xl text-2xl font-bold leading-snug sm:text-3xl lg:text-4xl">
+            {t("impact.long.title")}
+          </h2>
+          <span className="mx-auto mt-8 block h-1 w-20 rounded-full bg-accent" />
         </div>
       </section>
     </PageShell>
