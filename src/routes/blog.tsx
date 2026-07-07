@@ -2,11 +2,30 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
-import { FileText, Download, Calendar, User } from "lucide-react";
+import {
+  FileText,
+  Download,
+  Calendar,
+  Newspaper,
+  BookOpen,
+  ArrowUpLeft,
+  Sparkles,
+} from "lucide-react";
 import { PageShell, PageHeader } from "@/components/layout/PageShell";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { articlesByLang, articlesQueryOptions, reportsQueryOptions, newsQueryOptions } from "@/lib/content";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Lang } from "@/lib/i18n";
+
+/** ISO date → localized long form, e.g. "10 June 2026" / "١٠ يونيو ٢٠٢٦". */
+function formatDate(iso: string, lang: Lang) {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat(lang === "ar" ? "ar" : "en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(d);
+}
 
 const blogSearchSchema = z.object({
   tab: z.enum(["articles", "reports", "news"]).optional(),
@@ -78,10 +97,28 @@ function BlogPage() {
           }
           className="w-full"
         >
-          <TabsList className="grid w-full max-w-xl grid-cols-3">
-            <TabsTrigger value="articles">{t("blog.tab.articles")}</TabsTrigger>
-            <TabsTrigger value="reports">{t("blog.tab.reports")}</TabsTrigger>
-            <TabsTrigger value="news">{t("blog.tab.news")}</TabsTrigger>
+          <TabsList className="grid h-auto w-full max-w-xl grid-cols-3 gap-1 rounded-xl bg-secondary p-1.5">
+            <TabsTrigger
+              value="articles"
+              className="gap-2 rounded-lg py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
+            >
+              <BookOpen className="h-4 w-4" />
+              {t("blog.tab.articles")}
+            </TabsTrigger>
+            <TabsTrigger
+              value="reports"
+              className="gap-2 rounded-lg py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
+            >
+              <FileText className="h-4 w-4" />
+              {t("blog.tab.reports")}
+            </TabsTrigger>
+            <TabsTrigger
+              value="news"
+              className="gap-2 rounded-lg py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
+            >
+              <Newspaper className="h-4 w-4" />
+              {t("blog.tab.news")}
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="articles" className="mt-8">
@@ -89,20 +126,31 @@ function BlogPage() {
               {articles.map((a) => (
                 <article
                   key={a.id}
-                  className="rounded-lg border border-border bg-card p-6 transition-all hover:border-accent hover:shadow-lg"
+                  className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:-translate-y-1 hover:border-accent/60 hover:shadow-xl"
                 >
-                  <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-1" dir="ltr">
-                      <Calendar className="h-3 w-3" />
-                      {a.date}
-                    </span>
-                    <span className="inline-flex items-center gap-1">
-                      <User className="h-3 w-3" />
-                      {a.author}
+                  <span className="h-1.5 w-full bg-gradient-to-l from-accent to-primary" />
+                  <div className="flex flex-1 flex-col p-6">
+                    <div className="mb-4 flex items-center gap-2">
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-primary/10 text-sm font-bold text-primary">
+                        {a.author.trim().charAt(0)}
+                      </span>
+                      <div className="min-w-0 leading-tight">
+                        <p className="truncate text-sm font-semibold text-foreground">{a.author}</p>
+                        <p className="inline-flex items-center gap-1 text-xs text-muted-foreground" dir="ltr">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(a.date, lang)}
+                        </p>
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-bold leading-snug text-foreground transition-colors group-hover:text-primary">
+                      {a.title}
+                    </h3>
+                    <p className="mt-2 flex-1 text-sm leading-loose text-muted-foreground">{a.excerpt}</p>
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent opacity-0 transition-opacity group-hover:opacity-100">
+                      {t("blog.readmore")}
+                      <ArrowUpLeft className="h-4 w-4" />
                     </span>
                   </div>
-                  <h3 className="mt-3 text-lg font-bold text-foreground">{a.title}</h3>
-                  <p className="mt-2 text-sm leading-loose text-muted-foreground">{a.excerpt}</p>
                 </article>
               ))}
             </div>
@@ -113,21 +161,56 @@ function BlogPage() {
           </TabsContent>
 
           <TabsContent value="news" className="mt-8">
-            <div className="space-y-4">
-              {news.map((n) => (
-                <article
-                  id={`news-${n.id}`}
-                  key={n.id}
-                  className="scroll-mt-24 rounded-lg border border-border bg-card p-6 transition-shadow"
-                >
-                  <div className="text-xs text-muted-foreground" dir="ltr">
-                    {n.date}
+            {news.length > 0 && (
+              <article
+                id={`news-${news[0].id}`}
+                className="group relative mb-6 scroll-mt-24 overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-l from-primary via-forest-deep to-graphite p-8 text-primary-foreground shadow-lg transition-all"
+              >
+                <div
+                  className="pointer-events-none absolute inset-0 opacity-[0.06]"
+                  style={{
+                    backgroundImage: "radial-gradient(white 1px, transparent 1px)",
+                    backgroundSize: "16px 16px",
+                  }}
+                />
+                <div className="absolute -end-10 -top-10 h-48 w-48 rounded-full bg-accent/20 blur-3xl" />
+                <div className="relative">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-accent px-3 py-1 text-xs font-bold text-accent-foreground">
+                      <Sparkles className="h-3.5 w-3.5" />
+                      {t("blog.latest")}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-sm text-primary-foreground/80" dir="ltr">
+                      <Calendar className="h-4 w-4" />
+                      {formatDate(news[0].date, lang)}
+                    </span>
                   </div>
-                  <h3 className="mt-2 text-lg font-bold text-foreground">{n.title}</h3>
-                  <p className="mt-2 text-sm leading-loose text-muted-foreground">{n.excerpt}</p>
-                </article>
+                  <h3 className="mt-4 text-2xl font-bold leading-snug sm:text-3xl">{news[0].title}</h3>
+                  <p className="mt-3 max-w-3xl text-base leading-loose text-primary-foreground/85">
+                    {news[0].excerpt}
+                  </p>
+                </div>
+              </article>
+            )}
+
+            <ol className="relative space-y-4 border-s-2 border-border ps-6">
+              {news.slice(1).map((n) => (
+                <li key={n.id} className="relative">
+                  <span className="absolute -start-[1.7rem] top-6 h-3 w-3 rounded-full border-2 border-background bg-accent" />
+                  <article
+                    id={`news-${n.id}`}
+                    className="scroll-mt-24 rounded-xl border border-border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-md"
+                  >
+                    <div className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-muted-foreground" dir="ltr">
+                      <Calendar className="h-3 w-3" />
+                      {formatDate(n.date, lang)}
+                    </div>
+                    <h3 className="mt-3 text-lg font-bold text-foreground">{n.title}</h3>
+                    <p className="mt-2 text-sm leading-loose text-muted-foreground">{n.excerpt}</p>
+                  </article>
+                </li>
               ))}
-            </div>
+            </ol>
           </TabsContent>
         </Tabs>
       </section>
@@ -155,21 +238,30 @@ function ReportsViewer() {
               <li key={r.id}>
                 <button
                   onClick={() => setActive(r)}
-                  className={`w-full rounded-lg border p-4 text-start transition-all ${
+                  className={`w-full rounded-xl border p-4 text-start transition-all ${
                     isActive
-                      ? "border-accent bg-accent/10"
-                      : "border-border bg-card hover:border-accent/50"
+                      ? "border-accent bg-accent/10 shadow-sm ring-1 ring-accent/30"
+                      : "border-border bg-card hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-md"
                   }`}
                 >
                   <div className="flex items-start gap-3">
-                    <FileText className="mt-1 h-5 w-5 shrink-0 text-accent" />
+                    <span
+                      className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg transition-colors ${
+                        isActive ? "bg-accent text-accent-foreground" : "bg-accent/10 text-accent"
+                      }`}
+                    >
+                      <FileText className="h-5 w-5" />
+                    </span>
                     <div className="flex-1">
                       <h4 className="font-bold text-foreground">{r.title}</h4>
                       <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                         {r.description}
                       </p>
-                      <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
-                        <span dir="ltr">{r.date}</span>
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                        <span className="inline-flex items-center gap-1" dir="ltr">
+                          <Calendar className="h-3 w-3" />
+                          {formatDate(r.date, lang)}
+                        </span>
                         <span>{r.pages} {t("blog.pages")}</span>
                       </div>
                     </div>
@@ -182,13 +274,13 @@ function ReportsViewer() {
       </aside>
 
       <div className="lg:col-span-8">
-        <div className="overflow-hidden rounded-lg border border-border bg-card">
-          <div className="flex items-center justify-between border-b border-border bg-secondary px-4 py-3">
-            <h3 className="font-bold text-foreground">{active.title}</h3>
+        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
+          <div className="flex items-center justify-between gap-3 border-b border-border bg-secondary px-4 py-3">
+            <h3 className="min-w-0 truncate font-bold text-foreground">{active.title}</h3>
             <a
               href={active.url}
               download
-              className="inline-flex items-center gap-2 rounded-md bg-accent px-3 py-1.5 text-sm font-bold text-accent-foreground hover:scale-[1.02]"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-accent px-4 py-1.5 text-sm font-bold text-accent-foreground shadow-sm transition-opacity hover:opacity-90"
             >
               <Download className="h-4 w-4" />
               {t("blog.download")}

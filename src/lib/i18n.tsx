@@ -203,6 +203,8 @@ const dict: Dict = {
   "blog.tab.news": { ar: "الأخبار", en: "News" },
   "blog.download": { ar: "تحميل PDF", en: "Download PDF" },
   "blog.pages": { ar: "صفحة", en: "pages" },
+  "blog.latest": { ar: "الأحدث", en: "Latest" },
+  "blog.readmore": { ar: "اقرأ المزيد", en: "Read more" },
 
   // Contact
   "contact.eyebrow": { ar: "تواصل", en: "Contact" },
