@@ -5,7 +5,7 @@ import type { Lang } from "./i18n";
 
 export const site = {
   nameShort: "RSIC",
-  phone: "+249112560828",
+  phone: "+249 112 560 828",
   email: "info@rsic.sd",
 } as const;
 
@@ -16,13 +16,13 @@ export const siteI18n = {
   },
   tagline: {
     ar: "نهضة صناعية يقودها المجتمع، من الريف إلى الأمة",
-    en: "A community-led industrial renaissance — from the countryside to the nation",
+    en: "A Community-Led Industrial Renaissance — From The Countryside To The Nation",
   },
   description: {
     ar: "مبادرة وطنية لإنشاء 378 مجمعاً صناعياً ريفياً في 189 محلية بالسودان، بملكية مجتمعية وحوكمة شفافة.",
     en: "A national initiative to build 378 rural industrial complexes across 189 localities in Sudan, with community ownership and transparent governance.",
   },
-  donateCta: { ar: "ادعم المبادرة", en: "Support the Initiative" },
+  donateCta: { ar: "ادعم المبادرة", en: "Support The Initiative" },
 } as const;
 
 export const nav = [
@@ -80,10 +80,10 @@ export const impactStatsByLang: Record<Lang, { value: string; label: string }[]>
     { value: "40–50", label: "مصنعاً لكل مجمع" },
   ],
   en: [
-    { value: "378", label: "Target complexes" },
-    { value: "189", label: "Localities across Sudan" },
-    { value: "17,010", label: "Factories in the network" },
-    { value: "40–50", label: "Factories per complex" },
+    { value: "378", label: "Target Complexes" },
+    { value: "189", label: "Localities Across Sudan" },
+    { value: "17,010", label: "Factories In The Network" },
+    { value: "40–50", label: "Factories Per Complex" },
   ],
 };
 

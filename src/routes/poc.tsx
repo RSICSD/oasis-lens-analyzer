@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { zodValidator, fallback } from "@tanstack/zod-adapter";
@@ -44,7 +44,45 @@ export const Route = createFileRoute("/poc")({
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(pocQueryOptions),
   component: PocPage,
+  errorComponent: PocError,
+  notFoundComponent: PocNotFound,
 });
+
+function PocError() {
+  const { t } = useI18n();
+  return (
+    <PageShell>
+      <div className="mx-auto max-w-md px-4 py-24 text-center">
+        <h1 className="text-2xl font-bold text-primary">{t("poc.error.title")}</h1>
+        <p className="mt-3 leading-loose text-muted-foreground">{t("poc.error.body")}</p>
+        <Link
+          to="/poc"
+          className="mt-6 inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          {t("poc.error.retry")}
+        </Link>
+      </div>
+    </PageShell>
+  );
+}
+
+function PocNotFound() {
+  const { t } = useI18n();
+  return (
+    <PageShell>
+      <div className="mx-auto max-w-md px-4 py-24 text-center">
+        <h1 className="text-2xl font-bold text-primary">{t("poc.notfound.title")}</h1>
+        <p className="mt-3 leading-loose text-muted-foreground">{t("poc.notfound.body")}</p>
+        <Link
+          to="/"
+          className="mt-6 inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          {t("poc.notfound.home")}
+        </Link>
+      </div>
+    </PageShell>
+  );
+}
 
 function applyFilters(
   data: PocSnapshot,
