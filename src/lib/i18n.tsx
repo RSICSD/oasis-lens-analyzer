@@ -291,6 +291,25 @@ const dict: Dict = {
   "poc.drawer.wps.empty": { ar: "لا توجد حزم عمل مرتبطة.", en: "No linked work packages." },
   "poc.drawer.docs": { ar: "الوثائق", en: "Documents" },
 
+  // Oasis Lens — national rollout
+  "oasis.eyebrow": { ar: "العدسة الوطنية", en: "Oasis Lens" },
+  "oasis.title": { ar: "خارطة الانتشار الوطني", en: "National Rollout Map" },
+  "oasis.desc": {
+    ar: "من النموذج الأولي في الشمالية إلى شبكة من 378 مجمعاً عبر 18 ولاية — تتبّع مراحل التوسع حالة بحالة.",
+    en: "From the pilot in the Northern State to a network of 378 complexes across 18 states — track the expansion state by state.",
+  },
+  "oasis.map.title": { ar: "خريطة السودان", en: "Sudan Map" },
+  "oasis.map.hint": { ar: "مرّر أو انقر على أي ولاية لعرض تفاصيل الانتشار.", en: "Hover or click any state to see its rollout details." },
+  "oasis.roadmap.title": { ar: "خارطة الطريق", en: "Roadmap" },
+  "oasis.tasks.title": { ar: "المهام الوطنية", en: "National Tasks" },
+  "oasis.phase": { ar: "المرحلة", en: "Phase" },
+  "oasis.task.done": { ar: "مكتمل", en: "Done" },
+  "oasis.task.progress": { ar: "قيد التنفيذ", en: "In Progress" },
+  "oasis.task.planned": { ar: "مُخطط", en: "Planned" },
+  "oasis.state.localities": { ar: "المحليات", en: "Localities" },
+  "oasis.state.complexes": { ar: "المجمعات", en: "Complexes" },
+  "oasis.state.factories": { ar: "المصانع", en: "Factories" },
+
   // Common
   "common.backToHome": { ar: "العودة للرئيسية", en: "Back To Home" },
 };

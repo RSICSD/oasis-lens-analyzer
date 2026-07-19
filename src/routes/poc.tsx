@@ -16,6 +16,7 @@ import { DocumentsPanel } from "@/components/poc/DocumentsPanel";
 import { Complex3D } from "@/components/poc/Complex3D";
 import { UnitDetailDrawer } from "@/components/poc/UnitDetailDrawer";
 import { WorkPackageFilters } from "@/components/poc/WorkPackageFilters";
+import { OasisLens } from "@/components/poc/OasisLens";
 
 const pocSearchSchema = z.object({
   q: fallback(z.string().optional(), undefined),
@@ -201,6 +202,9 @@ function PocPage() {
           <DocumentsPanel data={filtered} />
         </div>
       </section>
+
+      {/* Oasis Lens — national rollout sub-dashboard */}
+      <OasisLens />
 
       <UnitDetailDrawer
         unit={selected}
